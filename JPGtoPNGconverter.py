@@ -2,17 +2,23 @@ import sys
 import os
 from PIL import Image
 
-path = sys.argv[1]
-directory = sys.argv[2]
+in_folder = sys.argv[1]
+out_folder = sys.argv[2]
+out_format = sys.argv[3]
 
-if not os.path.exists(directory):
-    os.makedirs(directory)
-    
+in_path = os.getcwd() + "\\" + in_folder.lstrip(".").lstrip("\\")
+out_path = os.getcwd() + "\\" + out_folder.lstrip(".").lstrip("\\")
 
-for filename in os.listdir(path):
-  clean_name = os.path.splitext(filename)[0]
-  img = Image.open(f'{path}{filename}')
-  #added the / in case user doesn't enter it. You may want to check for this and add or remover it. 
-  img.save(f'{directory}/{clean_name}.png', 'png')
-  print('all done!')
-
+if len(sys.argv) > 4:
+    if sys.argv[4] == "scan":
+        for file in os.listdir(in_path):
+            if file.endswith(".jpg"):
+                print(in_path + file)
+                print(out_path)
+else:
+    for file in os.listdir(in_path):
+        if file.endswith(".jpg"):
+            img = Image.open(in_path + file)
+            img_fn = file.split(".")[0]
+            print(f"converting {file} to {out_format}")
+            img.save(out_path + img_fn + "." + out_format, out_format)
